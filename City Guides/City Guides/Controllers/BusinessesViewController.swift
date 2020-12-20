@@ -16,7 +16,7 @@ class BusinessesViewController: UIViewController {
         didSet {
             searchTF.tintColor = UIColor.lightGray
             searchTF.setIcon(UIImage(systemName: "magnifyingglass")!)
-           }
+        }
     }
     
     var request = YelpRequest()
@@ -90,12 +90,12 @@ extension BusinessesViewController: UICollectionViewDataSource, UICollectionView
             cell.statusLabel.textColor = #colorLiteral(red: 0.6325919628, green: 0.08559093624, blue: 0.2397931218, alpha: 1)
         }
         cell.layer.cornerRadius = 15.0
-                cell.layer.borderWidth = 0.0
-                cell.layer.shadowColor = UIColor.black.cgColor
-                cell.layer.shadowOffset = CGSize(width: 0, height: 0)
-                cell.layer.shadowRadius = 5.0
+        cell.layer.borderWidth = 0.0
+        cell.layer.shadowColor = UIColor.black.cgColor
+        cell.layer.shadowOffset = CGSize(width: 0, height: 0)
+        cell.layer.shadowRadius = 5.0
         cell.layer.shadowOpacity = 0.2
-                cell.layer.masksToBounds = false
+        cell.layer.masksToBounds = false
         return cell
     }
     
