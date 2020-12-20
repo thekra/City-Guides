@@ -14,7 +14,7 @@ protocol UpdateCoor {
 
 class MapViewController: UIViewController, UpdateCoor {
 //    @IBOutlet weak var containerHeight: NSLayoutConstraint!
-    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
+//    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     @IBOutlet weak var containerView: UIView!
     enum CardState {
         case expanded
@@ -103,7 +103,7 @@ extension MapViewController {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleCardTap(recognzier:)))
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleCardPan(recognizer:)))
         
-        containerView.addGestureRecognizer(tapGestureRecognizer)
+//        containerView.addGestureRecognizer(tapGestureRecognizer)
         containerView.addGestureRecognizer(panGestureRecognizer)
     }
     
@@ -140,13 +140,11 @@ extension MapViewController {
             let frameAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) { [self] in
                 switch state {
                 case .expanded:
-                    print("ex")
                     containerView.frame.origin.y = self.view.frame.height - containerView.frame.height
 //                    self.containerHeight.constant = 10
 //                    self.view.layoutIfNeeded()
                 case .collaped:
-                    print("co")
-                    containerView.frame.origin.y = self.view.frame.height - 100
+                    containerView.frame.origin.y = self.view.frame.height - 196
 //                    self.containerHeight.constant = self.view.frame.height - 200
 //                    self.view.layoutIfNeeded()
                 }
