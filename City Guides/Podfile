@@ -7,7 +7,8 @@ target 'City Guides' do
 
   # Pods for City Guides
 
-pod 'GoogleMaps', '4.0.0'
+pod 'GoogleMaps'
+pod 'lottie-ios'
 
   target 'City GuidesTests' do
     inherit! :search_paths

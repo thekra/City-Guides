@@ -17,6 +17,7 @@
 		792C041B258CF7D3008FB32F /* BusinessesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792C041A258CF7D3008FB32F /* BusinessesViewController.swift */; };
 		792C0421258D1D07008FB32F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792C0420258D1D07008FB32F /* Extensions.swift */; };
 		792C0426258D2070008FB32F /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792C0425258D2070008FB32F /* CollectionViewCell.swift */; };
+		792C0439258ED165008FB32F /* BusinessDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792C0438258ED164008FB32F /* BusinessDetailsViewController.swift */; };
 		794E493E258C0FB500BD1FE1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794E493D258C0FB500BD1FE1 /* AppDelegate.swift */; };
 		794E4940258C0FB500BD1FE1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794E493F258C0FB500BD1FE1 /* SceneDelegate.swift */; };
 		794E4942258C0FB500BD1FE1 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794E4941258C0FB500BD1FE1 /* MapViewController.swift */; };
@@ -62,6 +63,7 @@
 		792C041A258CF7D3008FB32F /* BusinessesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessesViewController.swift; sourceTree = "<group>"; };
 		792C0420258D1D07008FB32F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		792C0425258D2070008FB32F /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		792C0438258ED164008FB32F /* BusinessDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessDetailsViewController.swift; sourceTree = "<group>"; };
 		794E493A258C0FB500BD1FE1 /* City Guides.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "City Guides.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		794E493D258C0FB500BD1FE1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		794E493F258C0FB500BD1FE1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 			children = (
 				794E4941258C0FB500BD1FE1 /* MapViewController.swift */,
 				792C041A258CF7D3008FB32F /* BusinessesViewController.swift */,
+				792C0438258ED164008FB32F /* BusinessDetailsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 				794E4937258C0FB500BD1FE1 /* Frameworks */,
 				794E4938258C0FB500BD1FE1 /* Resources */,
 				2E40F162C0750AFCE697A267 /* [CP] Copy Pods Resources */,
+				2F7BB6080CFEF2CC13628969 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -290,6 +294,7 @@
 				794E4958258C0FBB00BD1FE1 /* Frameworks */,
 				794E4959258C0FBB00BD1FE1 /* Resources */,
 				56F59A92A8F0D69F7D2E89BC /* [CP] Copy Pods Resources */,
+				7EAF2F79CE7FBF570948D52A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -411,6 +416,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-City Guides/Pods-City Guides-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		2F7BB6080CFEF2CC13628969 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-City Guides/Pods-City Guides-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-City Guides/Pods-City Guides-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-City Guides/Pods-City Guides-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		56F59A92A8F0D69F7D2E89BC /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -450,6 +472,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		7EAF2F79CE7FBF570948D52A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-City Guides-City GuidesUITests/Pods-City Guides-City GuidesUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-City Guides-City GuidesUITests/Pods-City Guides-City GuidesUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-City Guides-City GuidesUITests/Pods-City Guides-City GuidesUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		B1A49132F52003D5C390DAB2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -486,6 +525,7 @@
 				792C03E5258C1AD5008FB32F /* LocationManager.swift in Sources */,
 				794E4942258C0FB500BD1FE1 /* MapViewController.swift in Sources */,
 				792C041B258CF7D3008FB32F /* BusinessesViewController.swift in Sources */,
+				792C0439258ED165008FB32F /* BusinessDetailsViewController.swift in Sources */,
 				794E493E258C0FB500BD1FE1 /* AppDelegate.swift in Sources */,
 				792C03EA258C2001008FB32F /* Business.swift in Sources */,
 				794E4940258C0FB500BD1FE1 /* SceneDelegate.swift in Sources */,

@@ -9,8 +9,15 @@ import UIKit
 
 class BusinessesViewController: UIViewController {
     
+    @IBOutlet weak var childView: UIView!
     @IBOutlet weak var pullView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var searchTF: UITextField! {
+        didSet {
+            searchTF.tintColor = UIColor.lightGray
+            searchTF.setIcon(UIImage(systemName: "magnifyingglass")!)
+           }
+    }
     
     var request = YelpRequest()
     var businesses = [Business]()
@@ -54,6 +61,7 @@ class BusinessesViewController: UIViewController {
     func setupUI() {
         view.roundCorner(corners: [.topLeft, .topRight], radius: 30)
         pullView.roundCorner(corners: .allCorners, radius: 30)
+        childView.roundCorner(corners: [.topLeft, .topRight], radius: 30)
     }
 }
 
@@ -70,8 +78,34 @@ extension BusinessesViewController: UICollectionViewDataSource, UICollectionView
             collectionView.dequeueReusableCell(withReuseIdentifier: identifier,
                                                for: indexPath) as! CollectionViewCell
         let busi = businesses[indexPath.row]
+        let fileUrl = URL(string: busi.imageURL)
+        cell.businessImage.load(url: fileUrl!)
         cell.label.text = busi.name
+        switch busi.isClosed {
+        case false:
+            cell.statusLabel.text = "Open"
+            cell.statusLabel.textColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
+        case true:
+            cell.statusLabel.text = "Closed"
+            cell.statusLabel.textColor = #colorLiteral(red: 0.6325919628, green: 0.08559093624, blue: 0.2397931218, alpha: 1)
+        }
+        cell.layer.cornerRadius = 15.0
+                cell.layer.borderWidth = 0.0
+                cell.layer.shadowColor = UIColor.black.cgColor
+                cell.layer.shadowOffset = CGSize(width: 0, height: 0)
+                cell.layer.shadowRadius = 5.0
+        cell.layer.shadowOpacity = 0.2
+                cell.layer.masksToBounds = false
         return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let selected = collectionView.indexPathsForSelectedItems?.first {
+            let busi = businesses[selected.row]
+            let des = segue.destination as? BusinessDetailsViewController
+            
+            des?.busi = busi
+        }
     }
 }
 
