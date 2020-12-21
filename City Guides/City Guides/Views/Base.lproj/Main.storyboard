@@ -239,6 +239,7 @@
                     </view>
                     <connections>
                         <outlet property="childView" destination="HPM-0f-OoA" id="Nhz-Ec-5c2"/>
+                        <outlet property="cityNameLabel" destination="CVJ-HI-b4L" id="DRW-RD-8ry"/>
                         <outlet property="collectionView" destination="LY2-sl-cBC" id="Kms-Th-QX5"/>
                         <outlet property="pullView" destination="xVA-pZ-Bpp" id="NRF-hH-1Qj"/>
                         <outlet property="searchTF" destination="zSQ-uP-Z1M" id="LMr-kx-LdC"/>
