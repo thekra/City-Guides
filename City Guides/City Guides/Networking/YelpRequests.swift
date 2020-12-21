@@ -37,6 +37,25 @@ class YelpRequest {
         task.resume()
     }
     
+    func fetchCategory(alias: String, completion: @escaping (Result<CategoryResponse, Error>) -> Void) {
+        
+        let url = URL(string: YelpAPI.main + EndPoint.categories.rawValue + alias)
+        if let u = url {
+            var request = URLRequest(url: u)
+            request.setValue("Bearer \(YelpAPI.apiKey)", forHTTPHeaderField: "Authorization")
+            let task = session.dataTask(with: request) {
+                (data, response, error) in
+                
+                let result = self.processCategoryRequest(data: data, error: error)
+                print("result", result)
+                DispatchQueue.main.async {
+                    completion(result)
+                }
+            }
+            task.resume()
+        }
+    }
+    
     
     /**
      A function to return the decoded json
@@ -50,5 +69,12 @@ class YelpRequest {
             return .failure(error!)
         }
         return YelpAPI.businesses(fromJSON: jsonData)
+    }
+    
+    func processCategoryRequest(data: Data?, error: Error?) -> Result<CategoryResponse, Error> {
+        guard let jsonData = data else {
+            return .failure(error!)
+        }
+        return YelpAPI.category(fromJSON: jsonData)
     }
 }

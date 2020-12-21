@@ -9,6 +9,7 @@ import UIKit
 
 class BusinessesViewController: UIViewController {
     
+    @IBOutlet weak var cityNameLabel: UILabel!
     @IBOutlet weak var childView: UIView!
     @IBOutlet weak var pullView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -50,6 +51,7 @@ class BusinessesViewController: UIViewController {
                 print("Successfully found \(photos.count) photos.")
                 businesses = photos
                 DispatchQueue.main.async {
+                    cityNameLabel.text = photos[0].location.city
                     self.collectionView.reloadData()
                 }
             case let .failure(error):

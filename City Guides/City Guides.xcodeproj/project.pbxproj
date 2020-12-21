@@ -12,6 +12,7 @@
 		7927A196258FA65D00D6ABC6 /* WeatherAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7927A195258FA65D00D6ABC6 /* WeatherAPI.swift */; };
 		7927A19B258FA81F00D6ABC6 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7927A19A258FA81F00D6ABC6 /* Weather.swift */; };
 		7927A1A0258FC0EB00D6ABC6 /* WeatherRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7927A19F258FC0EB00D6ABC6 /* WeatherRequest.swift */; };
+		7927A1A525902DD800D6ABC6 /* CategoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7927A1A425902DD800D6ABC6 /* CategoryResponse.swift */; };
 		792C03E5258C1AD5008FB32F /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792C03E4258C1AD5008FB32F /* LocationManager.swift */; };
 		792C03EA258C2001008FB32F /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792C03E9258C2001008FB32F /* Business.swift */; };
 		792C03EF258C209A008FB32F /* YelpAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792C03EE258C2099008FB32F /* YelpAPI.swift */; };
@@ -62,6 +63,7 @@
 		7927A195258FA65D00D6ABC6 /* WeatherAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAPI.swift; sourceTree = "<group>"; };
 		7927A19A258FA81F00D6ABC6 /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		7927A19F258FC0EB00D6ABC6 /* WeatherRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherRequest.swift; sourceTree = "<group>"; };
+		7927A1A425902DD800D6ABC6 /* CategoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryResponse.swift; sourceTree = "<group>"; };
 		792C03E4258C1AD5008FB32F /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		792C03E9258C2001008FB32F /* Business.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Business.swift; sourceTree = "<group>"; };
 		792C03EE258C2099008FB32F /* YelpAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YelpAPI.swift; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 			children = (
 				792C03E9258C2001008FB32F /* Business.swift */,
 				7927A19A258FA81F00D6ABC6 /* Weather.swift */,
+				7927A1A425902DD800D6ABC6 /* CategoryResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -544,6 +547,7 @@
 				79F9891C258F154500463EA9 /* WeatherCollectionViewCell.swift in Sources */,
 				7927A196258FA65D00D6ABC6 /* WeatherAPI.swift in Sources */,
 				792C03EA258C2001008FB32F /* Business.swift in Sources */,
+				7927A1A525902DD800D6ABC6 /* CategoryResponse.swift in Sources */,
 				794E4940258C0FB500BD1FE1 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

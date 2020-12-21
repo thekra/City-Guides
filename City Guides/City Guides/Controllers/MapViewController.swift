@@ -20,7 +20,7 @@ class MapViewController: UIViewController, UpdateCoor {
         case expanded
         case collaped
     }
-    var busiVC = BusinessesViewController()
+    
     // MARK: - IBOutlets
     @IBOutlet weak var mapView: GMSMapView!
     
@@ -34,9 +34,16 @@ class MapViewController: UIViewController, UpdateCoor {
         return cardVisible ? .collaped : .expanded
     }
     var request = YelpRequest()
+    var categories = [(Business, String)]()
+//    {
+//        didSet {
+//            addMarkers()
+//        }
+//    }
     var businesses = [Business]() {
         didSet {
-            addMarkers()
+//            addMarkers()
+            addCategory()
         }
     }
     var coor = CLLocationCoordinate2D() {
@@ -77,8 +84,6 @@ extension MapViewController {
         mapView.settings.compassButton = true
         mapView.settings.myLocationButton = true
         mapView.mapStyle(withFilename: "dark", andType: "json")
-        //        let chooseButtonHeight = self.chooseButton.intrinsicContentSize.height
-        //        mapView.padding = UIEdgeInsets(top: 0, left: 0, bottom: chooseButtonHeight+10 , right: 0)
     }
     
     func setupCamera() {
@@ -86,11 +91,62 @@ extension MapViewController {
         mapView.animate(to: camera)
     }
     
-    func addMarkers() {
+    func addCategory() {
+        let group = DispatchGroup()
         for busi in businesses {
+            group.enter()
+            print(busi.categories[0].alias)
+            DispatchQueue.global(qos: .background).async { [self] in
+                request.fetchCategory(alias: busi.categories[0].alias) { [self] (result) in
+//                    group.leave()
+                    switch result {
+                    case let .success(category):
+                        print("Successfully found category")
+                        
+                        categories.append((busi, category.category.parentAliases.first ?? ""))
+                        
+                    case let .failure(error):
+                        print("Error fetching category: \(error)")
+                    }
+                }
+            }
+            group.leave()
+            sleep(1)
+        }
+        group.notify(queue: DispatchQueue.main, execute: { [self] in
+            addMarkers()
+            print("Finished all requests.")
+        })
+    }
+    
+    func addMarkers() {
+        for busi in categories {
             let marker = GMSMarker()
-            marker.icon = UIImage(named: "marker")
-            marker.position = CLLocationCoordinate2D(latitude: busi.coordinates.latitude, longitude: busi.coordinates.longitude)
+            var cate = ""
+            switch busi.1 {
+            case "restaurants":
+                cate = "res-marker"
+            case "active":
+                cate = "activity-marker"
+            case "parks":
+                cate = "park-marker"
+            case "food":
+                cate = "food-marker"
+            case "arts":
+                cate = "art-marker"
+            case "mexican":
+                cate = "mexican-marker"
+            case "japanese":
+                cate = "japanese-marker"
+            case "museums":
+                cate = "musem-marker"
+            default:
+                cate = "marker"
+            }
+            marker.icon = UIImage(named: cate)
+            marker.title = busi.0.name 
+            marker.snippet = busi.1
+            marker.position = CLLocationCoordinate2D(latitude: busi.0.coordinates.latitude, longitude: busi.0.coordinates.longitude)
             marker.map = mapView
         }
     }

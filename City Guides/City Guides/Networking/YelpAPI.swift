@@ -7,8 +7,13 @@
 
 import Foundation
 
+enum EndPoint: String {
+    case search = "businesses/search"
+    case categories = "categories/"
+}
+
 struct YelpAPI {
-    static var main = "https://api.yelp.com/v3/businesses/search"
+    static var main = "https://api.yelp.com/v3/"
     static var apiKey = "gMTonZerL6BgNDbif7SakFPb1b4t3itgLEJUJ7DmrIgZtCWe7SqKhwrERobiyu28Y4AFnHhuFmniS_G4hfJJDLR5-e1XTzb9XI1wR93BmkwhjPzm4dUj-Syuz9PbX3Yx"
     
     /**
@@ -34,7 +39,7 @@ struct YelpAPI {
      */
     private static func searchURL(parameters: [String:String]?) -> URL {
 
-        var components = URLComponents(string: main)!
+        var components = URLComponents(string: main + EndPoint.search.rawValue)!
         var queryItems = [URLQueryItem]()
         
         if let additionalParams = parameters {
@@ -54,9 +59,9 @@ struct YelpAPI {
      - parameter parameters: an optional parameter for if there are additional parameters
      - returns: a url to use for the request api
      */
-    static func searchURL() -> URL {
+    static func searchURL(parameter: [String:String]? = ["location": "NYC"]) -> URL {
         
-        return searchURL(parameters: ["location": "NYC"])
+        return searchURL(parameters: parameter)
     }
     
     /**
@@ -72,6 +77,18 @@ struct YelpAPI {
             let response = try decoder.decode(BusinessesResponse.self, from: data)
 
             return .success(response.businesses)
+        } catch let error {
+            return .failure(error)
+        }
+    }
+    
+    static func category(fromJSON data: Data) -> Result<CategoryResponse, Error> {
+        do {
+            let decoder = JSONDecoder()
+            
+            let response = try decoder.decode(CategoryResponse.self, from: data)
+
+            return .success(response)
         } catch let error {
             return .failure(error)
         }
