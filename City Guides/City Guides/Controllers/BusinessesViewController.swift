@@ -13,16 +13,15 @@ class BusinessesViewController: UIViewController {
     @IBOutlet weak var childView: UIView!
     @IBOutlet weak var pullView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var searchTF: UITextField! {
-        didSet {
-            searchTF.tintColor = UIColor.lightGray
-            searchTF.setIcon(UIImage(systemName: "magnifyingglass")!)
-        }
-    }
+    @IBOutlet weak var searchBar: UISearchBar!
     
+    // MARK: - Constants & Variables
     var request = YelpRequest()
     var businesses = [Business]()
+    var filterBusinesses = [Business]()
+    var isFiltered = false
     
+    // MARK: - LifeCycles
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
@@ -42,16 +41,18 @@ class BusinessesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        searchBar.delegate = self
         collectionView.dataSource = self
         collectionView.delegate = self
         
         request.fetchBusinesses { [self] (result) in
             switch result {
-            case let .success(photos):
-                print("Successfully found \(photos.count) photos.")
-                businesses = photos
+            case let .success(business):
+                print("Successfully found \(business.count) photos.")
+                businesses = business
+                filterBusinesses = business
                 DispatchQueue.main.async {
-                    cityNameLabel.text = photos[0].location.city
+                    cityNameLabel.text = business[0].location.city
                     self.collectionView.reloadData()
                 }
             case let .failure(error):
@@ -59,45 +60,47 @@ class BusinessesViewController: UIViewController {
             }
         }
     }
-    
+}
+
+// MARK: - Functions
+extension BusinessesViewController {
     func setupUI() {
         view.roundCorner(corners: [.topLeft, .topRight], radius: 30)
         pullView.roundCorner(corners: .allCorners, radius: 30)
         childView.roundCorner(corners: [.topLeft, .topRight], radius: 30)
+    }
+    
+    func businessStatus(statusLabel:UILabel, _ isClosed: Bool) {
+        switch isClosed {
+        case false:
+            statusLabel.text = "Open"
+            statusLabel.textColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
+        case true:
+            statusLabel.text = "Closed"
+            statusLabel.textColor = #colorLiteral(red: 0.6325919628, green: 0.08559093624, blue: 0.2397931218, alpha: 1)
+        }
     }
 }
 
 // MARK: - DataSource Extenstion
 extension BusinessesViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        businesses.count
+        return isFiltered ? filterBusinesses.count : businesses.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let identifier = "Cell"
-        let cell =
-            collectionView.dequeueReusableCell(withReuseIdentifier: identifier,
-                                               for: indexPath) as! CollectionViewCell
-        let busi = businesses[indexPath.row]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! CollectionViewCell
+        cell.setupCellShadow()
+        
+        let businessestList = isFiltered ? filterBusinesses : businesses
+        let busi = businessestList[indexPath.row]
         let fileUrl = URL(string: busi.imageURL)
         cell.businessImage.load(url: fileUrl!)
         cell.label.text = busi.name
-        switch busi.isClosed {
-        case false:
-            cell.statusLabel.text = "Open"
-            cell.statusLabel.textColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
-        case true:
-            cell.statusLabel.text = "Closed"
-            cell.statusLabel.textColor = #colorLiteral(red: 0.6325919628, green: 0.08559093624, blue: 0.2397931218, alpha: 1)
-        }
-        cell.layer.cornerRadius = 15.0
-        cell.layer.borderWidth = 0.0
-        cell.layer.shadowColor = UIColor.black.cgColor
-        cell.layer.shadowOffset = CGSize(width: 0, height: 0)
-        cell.layer.shadowRadius = 5.0
-        cell.layer.shadowOpacity = 0.2
-        cell.layer.masksToBounds = false
+        businessStatus(statusLabel: cell.statusLabel, busi.isClosed)
+         
         return cell
     }
     
@@ -111,3 +114,14 @@ extension BusinessesViewController: UICollectionViewDataSource, UICollectionView
     }
 }
 
+extension BusinessesViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            filterBusinesses = businesses
+        } else {
+            filterBusinesses = businesses.filter{$0.name.localizedCaseInsensitiveContains(searchText)}
+        }
+        isFiltered = true
+        collectionView.reloadData()
+    }
+}

@@ -163,6 +163,18 @@ extension UIImageView {
     }
 }
 
+extension UICollectionViewCell {
+    func setupCellShadow() {
+        self.layer.cornerRadius = 15.0
+        self.layer.borderWidth = 0.0
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOffset = CGSize(width: 0, height: 0)
+        self.layer.shadowRadius = 5.0
+        self.layer.shadowOpacity = 0.2
+        self.layer.masksToBounds = false
+    }
+}
+
 extension GMSMapView {
     func mapStyle(withFilename name: String, andType type: String) {
         do {
