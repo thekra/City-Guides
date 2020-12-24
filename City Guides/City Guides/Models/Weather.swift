@@ -23,7 +23,7 @@ struct Alert: Codable {
 struct Current: Codable {
     let lastUpdatedEpoch: Int
     let lastUpdated: String
-    let tempC: Int
+    let tempC: Double
 //    let tempF: Double
 //    let isDay: Int
 //    let condition: Condition
@@ -69,22 +69,22 @@ struct Condition: Codable {
     let icon: String
     let code: Int
 }
-
-enum Text: String, Codable {
-    case lightRain = "Light rain"
-    case lightRainShower = "Light rain shower"
-    case overcast = "Overcast"
-    case partlyCloudy = "Partly cloudy"
-    case patchyRainPossible = "Patchy rain possible"
-}
-
-enum WindDir: String, Codable {
-    case s = "S"
-    case sse = "SSE"
-    case ssw = "SSW"
-    case sw = "SW"
-    case wsw = "WSW"
-}
+//
+//enum Text: String, Codable {
+//    case lightRain = "Light rain"
+//    case lightRainShower = "Light rain shower"
+//    case overcast = "Overcast"
+//    case partlyCloudy = "Partly cloudy"
+//    case patchyRainPossible = "Patchy rain possible"
+//}
+//
+//enum WindDir: String, Codable {
+//    case s = "S"
+//    case sse = "SSE"
+//    case ssw = "SSW"
+//    case sw = "SW"
+//    case wsw = "WSW"
+//}
 
 // MARK: - Forecast
 struct Forecast: Codable {
@@ -161,7 +161,7 @@ struct Hour: Codable {
     let condition: Condition
     let windMph, windKph: Double
     let windDegree: Int
-    let windDir: WindDir
+   // let windDir: WindDir
     let pressureMB: Int
     let pressureIn, precipMm, precipIn: Double
     let humidity, cloud: Int
@@ -185,7 +185,7 @@ struct Hour: Codable {
         case windMph = "wind_mph"
         case windKph = "wind_kph"
         case windDegree = "wind_degree"
-        case windDir = "wind_dir"
+        // case windDir = "wind_dir"
         case pressureMB = "pressure_mb"
         case pressureIn = "pressure_in"
         case precipMm = "precip_mm"

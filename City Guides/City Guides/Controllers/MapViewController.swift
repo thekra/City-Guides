@@ -9,40 +9,41 @@ import UIKit
 import GoogleMaps
 
 protocol UpdateCoor {
-    func PassCoor(coor: CLLocationCoordinate2D)
+    func passCoor(coor: CLLocationCoordinate2D)
 }
 
-class MapViewController: UIViewController, UpdateCoor {
-//    @IBOutlet weak var containerHeight: NSLayoutConstraint!
-//    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var containerView: UIView!
+class MapViewController: UIViewController {
     enum CardState {
         case expanded
-        case collaped
+        case collapsed
     }
     
     // MARK: - IBOutlets
+    //    @IBOutlet weak var containerHeight: NSLayoutConstraint!
+    //    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var mapView: GMSMapView!
     
     // MARK: - Constants & Variables
     var cardHeight: CGFloat = 600
-    var cardHandle:CGFloat = 65
+    var cardHandle: CGFloat = 65
     var runningAnimations = [UIViewPropertyAnimator]()
-    var animationProgressWhenInterrupted:CGFloat = 0
+    var animationProgressWhenInterrupted: CGFloat = 0
     var cardVisible = false
     var nextState: CardState {
-        return cardVisible ? .collaped : .expanded
+        return cardVisible ? .collapsed : .expanded
     }
+    
     var request = YelpRequest()
     var categories = [(Business, String)]()
-//    {
-//        didSet {
-//            addMarkers()
-//        }
-//    }
+    {
+        didSet {
+            addMarkers()
+        }
+    }
     var businesses = [Business]() {
         didSet {
-//            addMarkers()
+            //            addMarkers()
             addCategory()
         }
     }
@@ -68,10 +69,35 @@ class MapViewController: UIViewController, UpdateCoor {
                 print("Error fetching photos: \(error)")
             }
         }
-//        containerView.frame.origin.y = self.view.frame.height - 100 // not working
-//        heightConstraint.constant = 100
-//        containerHeight.constant = view.frame.height - 200
         addGestures()
+    }
+}
+
+// MARK: - GoogleMaps Delegate
+extension MapViewController: GMSMapViewDelegate {
+    
+    func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
+        performSegue(withIdentifier: "marker", sender: marker)
+    }
+    
+    func mapView(_ mapView: GMSMapView, didLongPressInfoWindowOf marker: GMSMarker) {
+        if (UIApplication.shared.canOpenURL(NSURL(string:"comgooglemaps://")! as URL)) {
+            UIApplication.shared.open(NSURL(string:"comgooglemaps://?saddr=&daddr=\(marker.position.latitude),\(marker.position.longitude)&directionsmode=driving")! as URL, options: [:], completionHandler: nil)
+        } else {
+            let alert = UIAlertController(title: "Google Maps not found", message: "Please install Google Maps in your device.", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "marker" {
+            let nextVC =  segue.destination as! BusinessDetailsViewController
+            if let marker = sender as? GMSMarker,
+               let dict = marker.userData as? Business {
+                nextVC.busi = dict
+            }
+        }
     }
 }
 
@@ -79,7 +105,7 @@ class MapViewController: UIViewController, UpdateCoor {
 extension MapViewController {
     
     func setupMapView() {
-        //mapView.delegate = self
+        mapView.delegate = self
         mapView.isMyLocationEnabled = true
         mapView.settings.compassButton = true
         mapView.settings.myLocationButton = true
@@ -96,22 +122,22 @@ extension MapViewController {
         for busi in businesses {
             group.enter()
             print(busi.categories[0].alias)
-            DispatchQueue.global(qos: .background).async { [self] in
-                request.fetchCategory(alias: busi.categories[0].alias) { [self] (result) in
-//                    group.leave()
-                    switch result {
-                    case let .success(category):
-                        print("Successfully found category")
-                        
-                        categories.append((busi, category.category.parentAliases.first ?? ""))
-                        
-                    case let .failure(error):
-                        print("Error fetching category: \(error)")
-                    }
+            //            DispatchQueue.global(qos: .userInitiated).async { [self] in
+            request.fetchCategory(alias: busi.categories[0].alias) { [self] (result) in
+                //                    group.leave()
+                switch result {
+                case let .success(category):
+                    print("Successfully found category")
+                    
+                    categories.append((busi, category.category.parentAliases.first ?? ""))
+                    
+                case let .failure(error):
+                    print("Error fetching category: \(error)")
+                //                    }
                 }
             }
             group.leave()
-            sleep(1)
+            //            sleep(1)
         }
         group.notify(queue: DispatchQueue.main, execute: { [self] in
             addMarkers()
@@ -119,36 +145,76 @@ extension MapViewController {
         })
     }
     
+    func addCategory1() {
+        //        let group = DispatchGroup()
+        let concurrentQueue = DispatchQueue(label: "swiftlee.concurrent.queue")
+        
+        for busi in businesses {
+            //            group.enter()
+            print(busi.categories[0].alias)
+            
+            //            DispatchQueue.global().async { [self] in
+            //                group.enter()
+            concurrentQueue.async { [self] in
+                request.fetchCategory(alias: busi.categories[0].alias) { [self] (result) in
+                    //                    group.enter()
+                    switch result {
+                    case let .success(category):
+                        print("Successfully found category")
+                        
+                        categories.append((busi, category.category.parentAliases.first ?? ""))
+                    //                        group.leave()
+                    case let .failure(error):
+                        print("Error fetching category: \(error)")
+                    //                        group.leave()
+                    }
+                }
+            }
+            //            group.leave()
+            //            sleep(1)
+        }
+        //        group.notify(queue: DispatchQueue.main, execute: { [self] in
+        //            addMarkers()
+        //            print("Finished all requests.")
+        //        })
+    }
+    
     func addMarkers() {
         for busi in categories {
             let marker = GMSMarker()
-            var cate = ""
-            switch busi.1 {
-            case "restaurants":
-                cate = "res-marker"
-            case "active":
-                cate = "activity-marker"
-            case "parks":
-                cate = "park-marker"
-            case "food":
-                cate = "food-marker"
-            case "arts":
-                cate = "art-marker"
-            case "mexican":
-                cate = "mexican-marker"
-            case "japanese":
-                cate = "japanese-marker"
-            case "museums":
-                cate = "musem-marker"
-            default:
-                cate = "marker"
-            }
-            marker.icon = UIImage(named: cate)
+            marker.userData = busi.0
+            marker.icon = UIImage(named: categoryImage(busi: busi.1))
             marker.title = busi.0.name 
             marker.snippet = busi.1
-            marker.position = CLLocationCoordinate2D(latitude: busi.0.coordinates.latitude, longitude: busi.0.coordinates.longitude)
+            marker.position = CLLocationCoordinate2D(latitude: busi.0.coordinates.latitude,
+                                                     longitude: busi.0.coordinates.longitude)
             marker.map = mapView
         }
+    }
+    
+    func categoryImage(busi: String) -> String {
+        var cate = ""
+        switch busi {
+        case "restaurants":
+            cate = "res-marker"
+        case "active":
+            cate = "activity-marker"
+        case "parks":
+            cate = "park-marker"
+        case "food":
+            cate = "food-marker"
+        case "arts":
+            cate = "art-marker"
+        case "mexican":
+            cate = "mexican-marker"
+        case "japanese":
+            cate = "japanese-marker"
+        case "museums":
+            cate = "musem-marker"
+        default:
+            cate = "marker"
+        }
+        return cate
     }
 }
 
@@ -156,10 +222,10 @@ extension MapViewController {
 extension MapViewController {
     
     func addGestures() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleCardTap(recognzier:)))
+        //        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleCardTap(recognzier:)))
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleCardPan(recognizer:)))
         
-//        containerView.addGestureRecognizer(tapGestureRecognizer)
+        //        containerView.addGestureRecognizer(tapGestureRecognizer)
         containerView.addGestureRecognizer(panGestureRecognizer)
     }
     
@@ -197,12 +263,12 @@ extension MapViewController {
                 switch state {
                 case .expanded:
                     containerView.frame.origin.y = self.view.frame.height - containerView.frame.height
-//                    self.containerHeight.constant = 10
-//                    self.view.layoutIfNeeded()
-                case .collaped:
+                //                    self.containerHeight.constant = 10
+                //                    self.view.layoutIfNeeded()
+                case .collapsed:
                     containerView.frame.origin.y = self.view.frame.height - 196
-//                    self.containerHeight.constant = self.view.frame.height - 200
-//                    self.view.layoutIfNeeded()
+                //                    self.containerHeight.constant = self.view.frame.height - 200
+                //                    self.view.layoutIfNeeded()
                 }
             }
             
@@ -241,8 +307,8 @@ extension MapViewController {
 }
 
 // MARK: - Protocols
-extension MapViewController {
-    func PassCoor(coor: CLLocationCoordinate2D) {
+extension MapViewController: UpdateCoor {
+    func passCoor(coor: CLLocationCoordinate2D) {
         self.coor = coor
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 class WeatherRequest {
     private let session: URLSession = {
@@ -20,9 +21,9 @@ class WeatherRequest {
      - returns: void
      */
     
-    func fetchWeather(completion: @escaping (Result<WeatherResponse, Error>) -> Void) {
+    func fetchWeather(coordinates: CLLocationCoordinate2D, completion: @escaping (Result<WeatherResponse, Error>) -> Void) {
         
-        let url = WeatherAPI.weatherURL()
+        let url = WeatherAPI.weatherURL(coor: coordinates)
         let request = URLRequest(url: url)
         let task = session.dataTask(with: request) {
             (data, response, error) in

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 struct WeatherAPI {
     static var main = "https://api.weatherapi.com/v1/forecast.json"
@@ -58,9 +59,9 @@ struct WeatherAPI {
      - parameter parameters: an optional parameter for if there are additional parameters
      - returns: a url to use for the request api
      */
-    static func weatherURL() -> URL {
+    static func weatherURL(coor: CLLocationCoordinate2D) -> URL {
         
-        return weatherURL(parameters: ["q": "48.8567,2.3508"])
+        return weatherURL(parameters: ["q": "\(String(coor.latitude)),\(String(coor.longitude))"])
     }
     
     /**

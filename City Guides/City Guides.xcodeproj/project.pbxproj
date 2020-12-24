@@ -142,6 +142,15 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		7927A1A92592473D00D6ABC6 /* cells */ = {
+			isa = PBXGroup;
+			children = (
+				792C0425258D2070008FB32F /* CollectionViewCell.swift */,
+				79F9891B258F154500463EA9 /* WeatherCollectionViewCell.swift */,
+			);
+			path = cells;
+			sourceTree = "<group>";
+		};
 		792C042B258D788D008FB32F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,8 +240,7 @@
 			children = (
 				794E4943258C0FB500BD1FE1 /* Main.storyboard */,
 				794E4948258C0FBB00BD1FE1 /* LaunchScreen.storyboard */,
-				792C0425258D2070008FB32F /* CollectionViewCell.swift */,
-				79F9891B258F154500463EA9 /* WeatherCollectionViewCell.swift */,
+				7927A1A92592473D00D6ABC6 /* cells */,
 			);
 			path = Views;
 			sourceTree = "<group>";

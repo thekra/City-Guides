@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class BusinessDetailsViewController: UIViewController {
 
@@ -16,32 +17,43 @@ class BusinessDetailsViewController: UIViewController {
     
     var busi: Business?
     var request = WeatherRequest()
+    var coor = CLLocationCoordinate2D() {
+        didSet {
+            request.fetchWeather(coordinates: self.coor) { [self] (result) in
+                switch result {
+                case let .success(w):
+                    print("Successfully found \(w).")
+                    weather = w
+                case let .failure(error):
+                    print("Error fetching photos: \(error)")
+                }
+            }
+        }
+    }
     var weather: WeatherResponse? {
         didSet {
             self.collectionView.reloadData()
         }
     }
 
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        return formatter
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        coor = CLLocationCoordinate2D(latitude: (busi?.coordinates.latitude) ?? 0.0, longitude: (busi?.coordinates.longitude) ?? 0.0)
         collectionView.delegate = self
         collectionView.dataSource = self
         businessInfo()
         setupUI()
-        request.fetchWeather { [self] (result) in
-            switch result {
-            case let .success(photos):
-                print("Successfully found \(photos) photos.")
-                weather = photos
-//                DispatchQueue.main.async {
-//                    collectionView.reloadData()
-//                }
-            case let .failure(error):
-                print("Error fetching photos: \(error)")
-            }
-        }
     }
-    
+}
+
+// MARK: - Functions
+extension BusinessDetailsViewController {
     func businessInfo() {
         busiName.text = busi?.name
         let fileUrl = URL(string: busi!.imageURL)
@@ -54,6 +66,33 @@ class BusinessDetailsViewController: UIViewController {
         businessImage.roundCorner(corners: [.bottomLeft, .bottomRight], radius: 30)
         businessImage.shadow(alpha: 1)
     }
+    
+    func weatherTime(_ time: String?) -> String {
+        let dateObj = dateFormatter.date(from: time ?? "")
+        dateFormatter.dateFormat = "h a"
+        let date = dateFormatter.string(from: dateObj ?? Date())
+        
+        return date
+    }
+    
+    func weatherImage(_ condition: String) -> UIImage {
+        var image: UIImage?
+        switch condition {
+        case _ where (condition.contains("rain") == true):
+            image = UIImage(systemName: "cloud.rain.fill")
+        case _ where (condition.contains("cloud") == true):
+            image = UIImage(systemName: "cloud.fill")
+        case _ where (condition.contains("Overcast") == true):
+          image = UIImage(systemName: "cloud.sun.fill")
+        case _ where (condition.contains("clear") == true):
+            image = UIImage(systemName: "sun.min.fill")
+        case _ where (condition.contains("drizzle") == true):
+           image = UIImage(systemName: "cloud.drizzle.fill")
+        default:
+            break
+        }
+        return image!
+    }
 }
 
 extension BusinessDetailsViewController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -62,49 +101,24 @@ extension BusinessDetailsViewController: UICollectionViewDataSource, UICollectio
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let identifier = "Cell"
-        let cell =
-            collectionView.dequeueReusableCell(withReuseIdentifier: identifier,
-                                               for: indexPath) as! WeatherCollectionViewCell
         let forecase = weather?.forecast.forecastday[0]
         let hour = forecase?.hour[indexPath.row]
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-        let d = hour?.time
-        let dateObj = dateFormatter.date(from: d ?? "")
-        dateFormatter.dateFormat = "h a"
-        let date = dateFormatter.string(from: dateObj ?? Date())
         
-        cell.hourLabel.text = date
+        let identifier = "Cell"
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! WeatherCollectionViewCell
+        cell.setupCellShadow()
+        
+        cell.hourLabel.text = hour?.time
         cell.degreeLabel.text = String(hour?.tempC ?? 0) + " ℃"
-        switch hour?.condition.text {
-        case _ where (hour?.condition.text.contains("rain") == true):
-            cell.weatherImage.image = UIImage(systemName: "cloud.rain.fill")
-        case _ where (hour?.condition.text.contains("cloud") == true):
-            cell.weatherImage.image = UIImage(systemName: "cloud.fill")
-        case _ where (hour?.condition.text.contains("Overcast") == true):
-            cell.weatherImage.image = UIImage(systemName: "cloud.sun.fill")
-        case _ where (hour?.condition.text.contains("clear") == true):
-            cell.weatherImage.image = UIImage(systemName: "sun.min.fill")
-        case _ where (hour?.condition.text.contains("drizzle") == true):
-            cell.weatherImage.image = UIImage(systemName: "cloud.drizzle.fill")
-        default:
-            break
-        }
-//        let fileUrl = URL(string:(hour?.condition.icon) ?? "" )
-//        if let url = fileUrl {
-//            cell.weatherImage.load(url: url )
-//        }
-        
-        cell.layer.cornerRadius = 15.0
-        cell.layer.borderWidth = 0.0
-        cell.layer.shadowColor = UIColor.black.cgColor
-        cell.layer.shadowOffset = CGSize(width: 0, height: 0)
-        cell.layer.shadowRadius = 5.0
-        cell.layer.shadowOpacity = 0.2
-        cell.layer.masksToBounds = false
+        cell.weatherImage.image = weatherImage(hour?.condition.text ?? "")
         
         return cell
+    }
+}
+
+// MARK: - Protocols
+extension BusinessDetailsViewController: UpdateCoor {
+    func passCoor(coor: CLLocationCoordinate2D) {
+        self.coor = coor
     }
 }

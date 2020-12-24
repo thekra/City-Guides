@@ -13,7 +13,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     var locationManager: CLLocationManager!
     static var currentLocation = CLLocationCoordinate2D() {
         didSet {
-            delegate?.PassCoor(coor: currentLocation)
+            delegate?.passCoor(coor: currentLocation)
         }
     }
     
