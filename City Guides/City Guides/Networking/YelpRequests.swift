@@ -20,7 +20,7 @@ class YelpRequest {
      - returns: void
      */
     
-    func fetchBusinesses(completion: @escaping (Result<[Business], Error>) -> Void) {
+    func fetchBusinesses(completion: @escaping (Result<BusinessesResponse, Error>) -> Void) {
         
         let url = YelpAPI.searchURL()
         var request = URLRequest(url: url)
@@ -29,6 +29,7 @@ class YelpRequest {
             (data, response, error) in
             
             let result = self.processBusinessRequest(data: data, error: error)
+            
             print("result", result)
             DispatchQueue.main.async {
                 completion(result)
@@ -64,7 +65,7 @@ class YelpRequest {
      - parameter error: takes Error as an input
      - returns: a Result of success or failure
      */
-    func processBusinessRequest(data: Data?, error: Error?) -> Result<[Business], Error> {
+    func processBusinessRequest(data: Data?, error: Error?) -> Result<BusinessesResponse, Error> {
         guard let jsonData = data else {
             return .failure(error!)
         }

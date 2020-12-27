@@ -15,13 +15,13 @@ class BusinessesViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    // MARK: - Constants & Variables
+// MARK: - Constants & Variables
     var request = YelpRequest()
-    var businesses = [Business]()
-    var filterBusinesses = [Business]()
+    var businesses = [BusinessRealm]()
+    var filterBusinesses = [BusinessRealm]()
     var isFiltered = false
     
-    // MARK: - LifeCycles
+// MARK: - LifeCycles
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
@@ -40,24 +40,35 @@ class BusinessesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
         searchBar.delegate = self
         collectionView.dataSource = self
         collectionView.delegate = self
-        
-        request.fetchBusinesses { [self] (result) in
-            switch result {
-            case let .success(business):
-                print("Successfully found \(business.count) photos.")
-                businesses = business
-                filterBusinesses = business
-                DispatchQueue.main.async {
-                    cityNameLabel.text = business[0].location.city
-                    self.collectionView.reloadData()
+        if Reachability.isConnectedToNetwork() {
+            request.fetchBusinesses { [self] (result) in
+                switch result {
+                case let .success(business):
+                    print("Successfully found \(business.businesses.count) businesses.")
+                    businesses = Array(business.businesses)
+                    filterBusinesses = Array(business.businesses)
+                    for i in businesses {
+                        let flag = RealmManager.saveBusinesses(i)
+                        print("flag", flag)
+                    }
+                        cityNameLabel.text = businesses[0].location!.city
+                        self.collectionView.reloadData()
+//                    }
+                case let .failure(error):
+                    print("Error fetching photos: \(error)")
                 }
-            case let .failure(error):
-                print("Error fetching photos: \(error)")
             }
+            
+        } else {
+            print("Internet Connection not Available!")
+            businesses = Array(RealmManager.getAllBusinesses()!)
+            print("RealmManager.getAllBusinesses()",RealmManager.getAllBusinesses())
+            print("businesses[0].location",businesses[0])
         }
     }
 }
@@ -106,7 +117,7 @@ extension BusinessesViewController: UICollectionViewDataSource, UICollectionView
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let selected = collectionView.indexPathsForSelectedItems?.first {
-            let busi = businesses[selected.row]
+            let busi = businesses[selected.item]
             let des = segue.destination as? BusinessDetailsViewController
             
             des?.busi = busi

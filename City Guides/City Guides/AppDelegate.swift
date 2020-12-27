@@ -16,6 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         GMSServices.provideAPIKey("AIzaSyA-kI9YJmAJSLm-0YJM4EQzfQT_h5tKcB8")
+        RealmManager.setRealmConfiguration()
+        print("path: \(NSHomeDirectory())")
         return true
     }
 

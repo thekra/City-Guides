@@ -9,6 +9,7 @@ target 'City Guides' do
 
 pod 'GoogleMaps'
 pod 'lottie-ios'
+pod 'RealmSwift', inhibit_warnings: true
 
   target 'City GuidesTests' do
     inherit! :search_paths

@@ -7,6 +7,7 @@
 
 import UIKit
 import GoogleMaps
+import RealmSwift
 
 protocol UpdateCoor {
     func passCoor(coor: CLLocationCoordinate2D)
@@ -18,13 +19,13 @@ class MapViewController: UIViewController {
         case collapsed
     }
     
-    // MARK: - IBOutlets
+// MARK: - IBOutlets
     //    @IBOutlet weak var containerHeight: NSLayoutConstraint!
     //    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var mapView: GMSMapView!
     
-    // MARK: - Constants & Variables
+// MARK: - Constants & Variables
     var cardHeight: CGFloat = 600
     var cardHandle: CGFloat = 65
     var runningAnimations = [UIViewPropertyAnimator]()
@@ -35,25 +36,25 @@ class MapViewController: UIViewController {
     }
     
     var request = YelpRequest()
-    var categories = [(Business, String)]()
-    {
+    var categories = [(BusinessRealm, String)]() {
         didSet {
             addMarkers()
         }
     }
-    var businesses = [Business]() {
+    
+    var businesses = [BusinessRealm]() {
         didSet {
-            //            addMarkers()
             addCategory()
         }
     }
+    
     var coor = CLLocationCoordinate2D() {
         didSet {
             setupCamera()
         }
     }
-    
-    // MARK: - LifeCycles
+    let group = DispatchGroup()
+// MARK: - LifeCycles
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -62,11 +63,11 @@ class MapViewController: UIViewController {
         setupMapView()
         request.fetchBusinesses { [self] (result) in
             switch result {
-            case let .success(photos):
-                print("Successfully found \(photos.count) photos.")
-                businesses = photos
+            case let .success(busi):
+                print("Successfully found \(busi.businesses.count) businesses.")
+                businesses = Array(busi.businesses)
             case let .failure(error):
-                print("Error fetching photos: \(error)")
+                print("Error fetching business: \(error)")
             }
         }
         addGestures()
@@ -94,7 +95,7 @@ extension MapViewController: GMSMapViewDelegate {
         if segue.identifier == "marker" {
             let nextVC =  segue.destination as! BusinessDetailsViewController
             if let marker = sender as? GMSMarker,
-               let dict = marker.userData as? Business {
+               let dict = marker.userData as? BusinessRealm {
                 nextVC.busi = dict
             }
         }
@@ -118,13 +119,14 @@ extension MapViewController {
     }
     
     func addCategory() {
-        let group = DispatchGroup()
+       
+        
         for busi in businesses {
             group.enter()
             print(busi.categories[0].alias)
             //            DispatchQueue.global(qos: .userInitiated).async { [self] in
             request.fetchCategory(alias: busi.categories[0].alias) { [self] (result) in
-                //                    group.leave()
+                //
                 switch result {
                 case let .success(category):
                     print("Successfully found category")
@@ -135,10 +137,12 @@ extension MapViewController {
                     print("Error fetching category: \(error)")
                 //                    }
                 }
+                group.leave()
             }
-            group.leave()
-            //            sleep(1)
+            //                        group.leave()
+            sleep(1)
         }
+//        sleep(3)
         group.notify(queue: DispatchQueue.main, execute: { [self] in
             addMarkers()
             print("Finished all requests.")
@@ -186,8 +190,8 @@ extension MapViewController {
             marker.icon = UIImage(named: categoryImage(busi: busi.1))
             marker.title = busi.0.name 
             marker.snippet = busi.1
-            marker.position = CLLocationCoordinate2D(latitude: busi.0.coordinates.latitude,
-                                                     longitude: busi.0.coordinates.longitude)
+            marker.position = CLLocationCoordinate2D(latitude: busi.0.coordinates!.latitude,
+                                                     longitude: busi.0.coordinates!.longitude)
             marker.map = mapView
         }
     }
