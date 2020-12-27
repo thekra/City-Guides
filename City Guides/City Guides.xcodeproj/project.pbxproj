@@ -13,6 +13,8 @@
 		7927A19B258FA81F00D6ABC6 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7927A19A258FA81F00D6ABC6 /* Weather.swift */; };
 		7927A1A0258FC0EB00D6ABC6 /* WeatherRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7927A19F258FC0EB00D6ABC6 /* WeatherRequest.swift */; };
 		7927A1A525902DD800D6ABC6 /* CategoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7927A1A425902DD800D6ABC6 /* CategoryResponse.swift */; };
+		7927A1B8259652FB00D6ABC6 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7927A1B7259652FB00D6ABC6 /* RealmManager.swift */; };
+		7927A1D82596B35100D6ABC6 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7927A1D72596B35100D6ABC6 /* Reachability.swift */; };
 		792C03E5258C1AD5008FB32F /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792C03E4258C1AD5008FB32F /* LocationManager.swift */; };
 		792C03EA258C2001008FB32F /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792C03E9258C2001008FB32F /* Business.swift */; };
 		792C03EF258C209A008FB32F /* YelpAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792C03EE258C2099008FB32F /* YelpAPI.swift */; };
@@ -30,6 +32,7 @@
 		794E494A258C0FBB00BD1FE1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 794E4948258C0FBB00BD1FE1 /* LaunchScreen.storyboard */; };
 		794E4955258C0FBB00BD1FE1 /* City_GuidesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794E4954258C0FBB00BD1FE1 /* City_GuidesTests.swift */; };
 		794E4960258C0FBB00BD1FE1 /* City_GuidesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794E495F258C0FBB00BD1FE1 /* City_GuidesUITests.swift */; };
+		799D86AE2597F5D1002A7096 /* weatherCloudy.json in Resources */ = {isa = PBXBuildFile; fileRef = 799D86AD2597F5D1002A7096 /* weatherCloudy.json */; };
 		79F9891C258F154500463EA9 /* WeatherCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F9891B258F154500463EA9 /* WeatherCollectionViewCell.swift */; };
 		DA045DA3DBA1DC967F972CD2 /* Pods_City_Guides.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51CA0BE9DF829BBEA99A708B /* Pods_City_Guides.framework */; };
 /* End PBXBuildFile section */
@@ -64,6 +67,8 @@
 		7927A19A258FA81F00D6ABC6 /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
 		7927A19F258FC0EB00D6ABC6 /* WeatherRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherRequest.swift; sourceTree = "<group>"; };
 		7927A1A425902DD800D6ABC6 /* CategoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryResponse.swift; sourceTree = "<group>"; };
+		7927A1B7259652FB00D6ABC6 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
+		7927A1D72596B35100D6ABC6 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		792C03E4258C1AD5008FB32F /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		792C03E9258C2001008FB32F /* Business.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Business.swift; sourceTree = "<group>"; };
 		792C03EE258C2099008FB32F /* YelpAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YelpAPI.swift; sourceTree = "<group>"; };
@@ -87,6 +92,7 @@
 		794E495B258C0FBB00BD1FE1 /* City GuidesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "City GuidesUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		794E495F258C0FBB00BD1FE1 /* City_GuidesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City_GuidesUITests.swift; sourceTree = "<group>"; };
 		794E4961258C0FBB00BD1FE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		799D86AD2597F5D1002A7096 /* weatherCloudy.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = weatherCloudy.json; sourceTree = "<group>"; };
 		79F9891B258F154500463EA9 /* WeatherCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCollectionViewCell.swift; sourceTree = "<group>"; };
 		D33E7CDE5A4DB98250209C24 /* Pods-City GuidesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-City GuidesTests.debug.xcconfig"; path = "Target Support Files/Pods-City GuidesTests/Pods-City GuidesTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -186,6 +192,7 @@
 			children = (
 				794E493D258C0FB500BD1FE1 /* AppDelegate.swift */,
 				794E493F258C0FB500BD1FE1 /* SceneDelegate.swift */,
+				799D86AD2597F5D1002A7096 /* weatherCloudy.json */,
 				792C040D258C37F4008FB32F /* dark.json */,
 				792C042B258D788D008FB32F /* Extensions */,
 				794E497D258C108300BD1FE1 /* Helpers */,
@@ -259,11 +266,21 @@
 		794E497D258C108300BD1FE1 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				792C03E4258C1AD5008FB32F /* LocationManager.swift */,
+				799D86A52597EAE6002A7096 /* Managers */,
+				7927A1D72596B35100D6ABC6 /* Reachability.swift */,
 				794E4946258C0FBB00BD1FE1 /* Assets.xcassets */,
 				794E494B258C0FBB00BD1FE1 /* Info.plist */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		799D86A52597EAE6002A7096 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				792C03E4258C1AD5008FB32F /* LocationManager.swift */,
+				7927A1B7259652FB00D6ABC6 /* RealmManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -379,6 +396,7 @@
 				794E494A258C0FBB00BD1FE1 /* LaunchScreen.storyboard in Resources */,
 				794E4947258C0FBB00BD1FE1 /* Assets.xcassets in Resources */,
 				794E4945258C0FB500BD1FE1 /* Main.storyboard in Resources */,
+				799D86AE2597F5D1002A7096 /* weatherCloudy.json in Resources */,
 				792C040E258C37F4008FB32F /* dark.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -547,6 +565,7 @@
 				7927A1A0258FC0EB00D6ABC6 /* WeatherRequest.swift in Sources */,
 				792C03FD258C2747008FB32F /* YelpRequests.swift in Sources */,
 				792C03E5258C1AD5008FB32F /* LocationManager.swift in Sources */,
+				7927A1B8259652FB00D6ABC6 /* RealmManager.swift in Sources */,
 				794E4942258C0FB500BD1FE1 /* MapViewController.swift in Sources */,
 				7927A19B258FA81F00D6ABC6 /* Weather.swift in Sources */,
 				792C041B258CF7D3008FB32F /* BusinessesViewController.swift in Sources */,
@@ -554,6 +573,7 @@
 				794E493E258C0FB500BD1FE1 /* AppDelegate.swift in Sources */,
 				79F9891C258F154500463EA9 /* WeatherCollectionViewCell.swift in Sources */,
 				7927A196258FA65D00D6ABC6 /* WeatherAPI.swift in Sources */,
+				7927A1D82596B35100D6ABC6 /* Reachability.swift in Sources */,
 				792C03EA258C2001008FB32F /* Business.swift in Sources */,
 				7927A1A525902DD800D6ABC6 /* CategoryResponse.swift in Sources */,
 				794E4940258C0FB500BD1FE1 /* SceneDelegate.swift in Sources */,

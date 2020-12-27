@@ -70,13 +70,13 @@ struct YelpAPI {
      - parameter data: takes data as an input
      - returns: a Result of success or failure
      */
-    static func businesses(fromJSON data: Data) -> Result<[Business], Error> {
+    static func businesses(fromJSON data: Data) -> Result<BusinessesResponse, Error> {
         do {
             let decoder = JSONDecoder()
             
             let response = try decoder.decode(BusinessesResponse.self, from: data)
-
-            return .success(response.businesses)
+            
+            return .success(response)
         } catch let error {
             return .failure(error)
         }

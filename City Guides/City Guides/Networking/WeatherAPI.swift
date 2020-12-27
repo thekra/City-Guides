@@ -61,7 +61,8 @@ struct WeatherAPI {
      */
     static func weatherURL(coor: CLLocationCoordinate2D) -> URL {
         
-        return weatherURL(parameters: ["q": "\(String(coor.latitude)),\(String(coor.longitude))"])
+        return weatherURL(parameters: ["q": "\(String(coor.latitude)),\(String(coor.longitude))",
+                                       "days":"3"])
     }
     
     /**
