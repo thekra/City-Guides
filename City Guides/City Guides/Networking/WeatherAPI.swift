@@ -71,11 +71,11 @@ struct WeatherAPI {
      - parameter data: takes data as an input
      - returns: a Result of success or failure
      */
-    static func forecast(fromJSON data: Data) -> Result<WeatherResponse, Error> {
+    static func forecast(fromJSON data: Data) -> Result<WeatherResponseR, Error> {
         do {
             let decoder = JSONDecoder()
             
-            let response = try decoder.decode(WeatherResponse.self, from: data)
+            let response = try decoder.decode(WeatherResponseR.self, from: data)
 
             return .success(response)
         } catch let error {

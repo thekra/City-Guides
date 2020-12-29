@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class BusinessesViewController: UIViewController {
     
@@ -16,9 +17,16 @@ class BusinessesViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     
 // MARK: - Constants & Variables
+    let businessManager = BusinessesManager()
     var request = YelpRequest()
     var businesses = [BusinessRealm]()
     var filterBusinesses = [BusinessRealm]()
+    var coor = CLLocationCoordinate2D() {
+        didSet {
+            print("coorBusi", coor )
+            fetchBusinesses()
+        }
+    }
     var isFiltered = false
     
 // MARK: - LifeCycles
@@ -40,36 +48,12 @@ class BusinessesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
         searchBar.delegate = self
         collectionView.dataSource = self
         collectionView.delegate = self
-        if Reachability.isConnectedToNetwork() {
-            request.fetchBusinesses { [self] (result) in
-                switch result {
-                case let .success(business):
-                    print("Successfully found \(business.businesses.count) businesses.")
-                    businesses = Array(business.businesses)
-                    filterBusinesses = Array(business.businesses)
-                    for i in businesses {
-                        let flag = RealmManager.saveBusinesses(i)
-                        print("flag", flag)
-                    }
-                        cityNameLabel.text = businesses[0].location!.city
-                        self.collectionView.reloadData()
-//                    }
-                case let .failure(error):
-                    print("Error fetching photos: \(error)")
-                }
-            }
-            
-        } else {
-            print("Internet Connection not Available!")
-            businesses = Array(RealmManager.getAllBusinesses()!)
-            print("RealmManager.getAllBusinesses()",RealmManager.getAllBusinesses())
-            print("businesses[0].location",businesses[0])
-        }
+        LocationManager.shared.determineCurrentLocation()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateCoor), name: NSNotification.Name(rawValue: "updateCoor"), object: nil)
     }
 }
 
@@ -81,14 +65,28 @@ extension BusinessesViewController {
         childView.roundCorner(corners: [.topLeft, .topRight], radius: 30)
     }
     
-    func businessStatus(statusLabel:UILabel, _ isClosed: Bool) {
-        switch isClosed {
-        case false:
-            statusLabel.text = "Open"
-            statusLabel.textColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
-        case true:
-            statusLabel.text = "Closed"
-            statusLabel.textColor = #colorLiteral(red: 0.6325919628, green: 0.08559093624, blue: 0.2397931218, alpha: 1)
+    @objc func updateCoor(_ notification: Notification) {
+        if let data = notification.object as? CLLocationCoordinate2D {
+            coor = data
+        }
+    }
+    
+    func fetchBusinesses() {
+        if Reachability.isConnectedToNetwork() {
+            BusinessesManager().fetchBusinesses(coordinates: coor) { [self] (busi) in
+                businesses = Array(busi.businesses)
+                filterBusinesses = Array(busi.businesses)
+                for i in businesses {
+                    let flag = RealmManager.saveBusinesses(i)
+                    print("flag", flag)
+                }
+                cityNameLabel.text = businesses[0].location!.city
+                self.collectionView.reloadData()
+            }
+        } else {
+            print("Internet Connection not Available!")
+            businesses = Array(RealmManager.getAllBusinesses()!)
+            cityNameLabel.text = "" // I'll make it like this for now
         }
     }
 }
@@ -110,7 +108,7 @@ extension BusinessesViewController: UICollectionViewDataSource, UICollectionView
         let fileUrl = URL(string: busi.imageURL)
         cell.businessImage.load(url: fileUrl!)
         cell.label.text = busi.name
-        businessStatus(statusLabel: cell.statusLabel, busi.isClosed)
+        businessManager.businessStatus(statusLabel: cell.statusLabel, busi.isClosed)
          
         return cell
     }

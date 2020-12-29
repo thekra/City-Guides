@@ -8,6 +8,14 @@
 import UIKit
 import GoogleMaps
 
+extension UIViewController {
+    func showAlert(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alertController, animated: true, completion: nil)
+    }
+}
+
 extension UIView {
     func roundCorner(corners: UIRectCorner, radius: Int = 8) {
         let maskPath1 = UIBezierPath(roundedRect: bounds,
@@ -19,7 +27,6 @@ extension UIView {
         layer.mask = maskLayer1
     }
     
-    #warning("custom")
     func shadow(radius: CGFloat = 10, alpha: CGFloat = 0.5, y: CGFloat = 100) {
         let gradientLayer:CAGradientLayer = CAGradientLayer()
         gradientLayer.frame = CGRect(x: 0, y: self.frame.height-y, width: self.frame.width, height: y)

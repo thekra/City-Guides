@@ -14,7 +14,7 @@ class RealmManager {
             // encryptionKey: key,
             // Set the new schema version. This must be greater than the previously used
             // version (if you’ve never set a schema version before, the version is 0).
-            schemaVersion: 1,
+            schemaVersion: 2,
             // Set the block which will be called automatically when opening a Realm with
             // a schema version lower than the one set above
             migrationBlock: { migration, oldSchemaVersion in
@@ -51,7 +51,28 @@ extension RealmManager {
     class func getAllBusinesses() -> Results<BusinessRealm>? {
         guard let realm = try? Realm() else {
             return nil }
-        let results = realm.objects(BusinessRealm.self)//.filter(NSPredicate(format: "age < 25")) -> string "name = ''"
+        let results = realm.objects(BusinessRealm.self)
+        
+        return results
+    }
+    
+    @discardableResult
+    class func saveWeather(_ weather: BusinessWeather) -> Bool {
+        guard let realm = try? Realm() else { return false }
+        do {
+            try realm.write {
+                realm.create(BusinessWeather.self, value: weather, update:.modified)
+            }
+        } catch {
+            return false
+        }
+        return true
+    }
+    
+    class func getWeather() -> Results<BusinessWeather>? {
+        guard let realm = try? Realm() else {
+            return nil }
+        let results = realm.objects(BusinessWeather.self)
         
         return results
     }
@@ -68,10 +89,9 @@ extension RealmManager {
 //        }
 //    }
 //    
-//    class func deletePersonWith(name: String) -> Bool {
-//        if let person = getAllPersons()?.filter("name =  %@", name).first {
-//            return deletePerson(person)
-//        }
-//        return false
-//    }
+    class func getWeatherBy(id: String) -> BusinessWeather? {
+        guard let realm = try? Realm() else { return nil }
+        let result = realm.objects(BusinessWeather.self).filter("businessID =  %@", id).first
+        return result
+    }
 }
