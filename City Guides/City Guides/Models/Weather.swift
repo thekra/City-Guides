@@ -6,130 +6,155 @@
 //
 
 import Foundation
+import RealmSwift
 
-// MARK: - WeatherResponse
-struct WeatherResponse: Codable {
-    let location: wLocation
-    let current: Current
-    let forecast: Forecast
-    let alert: Alert
+// MARK: - A class with the business id and its weather
+@objcMembers class BusinessWeather: Object, Codable {
+    dynamic var businessID: String = ""
+    dynamic var weather: WeatherResponseR? = nil
+    
+    override class func primaryKey() -> String {
+        return "businessID"
+    }
 }
 
-// MARK: - Alert
-struct Alert: Codable {
+@objcMembers class WeatherResponseR: Object, Codable {
+    dynamic var location: wLocationR? = nil
+    dynamic var current: wCurrentR? = nil
+    dynamic var forecast: wForecastR? = nil
+    
+    required override init() {
+        super.init()
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        location = try container.decode(wLocationR.self, forKey: .location)
+        current = try container.decode(wCurrentR.self, forKey: .current)
+        forecast = try container.decode(wForecastR.self, forKey: .forecast)
+        super.init()
+    }
 }
 
-// MARK: - Current
-struct Current: Codable {
-    let lastUpdatedEpoch: Int
-    let lastUpdated: String
-    let tempC: Double
-//    let tempF: Double
-//    let isDay: Int
-//    let condition: Condition
-//    let windMph: Double
-//    let windKph, windDegree: Double
-//    let windDir: WindDir
-//    let pressureMB: Int
-//    let pressureIn: Double
-//    let precipMm, precipIn, humidity, cloud: Int
-//    let feelslikeC, feelslikeF: Double
-//    let visKM, visMiles, uv: Int
-//    let gustMph, gustKph: Double
+@objcMembers class wLocationR: Object, Codable {
+    dynamic var name: String = ""
+    dynamic var region: String = ""
+    dynamic var country: String = ""
+    dynamic var lat: Double = 0.0
+    dynamic var lon: Double = 0.0
+    dynamic var localtimeEpoch: Int = 0
+    dynamic var localtime: String = ""
+    
+    enum CodingKeys: String, CodingKey {
+        case name, region, country, lat, lon
+        case localtimeEpoch = "localtime_epoch"
+        case localtime
+    }
+    
+    required override init() {
+        super.init()
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        region = try container.decode(String.self, forKey: .region)
+        country = try container.decode(String.self, forKey: .country)
+        lat = try container.decode(Double.self, forKey: .lat)
+        lon = try container.decode(Double.self, forKey: .lon)
+        localtimeEpoch = try container.decode(Int.self, forKey: .localtimeEpoch)
+        localtime = try container.decode(String.self, forKey: .localtime)
+        super.init()
+    }
+}
 
+@objcMembers class wCurrentR: Object, Codable {
+    dynamic var lastUpdatedEpoch: Int = 0
+    dynamic var lastUpdated: String = ""
+    dynamic var tempC: Double = 0.0
+    dynamic var tempF: Double = 0.0
+    
     enum CodingKeys: String, CodingKey {
         case lastUpdatedEpoch = "last_updated_epoch"
         case lastUpdated = "last_updated"
         case tempC = "temp_c"
-//        case tempF = "temp_f" 
-//        case isDay = "is_day"
-//        case condition
-//        case windMph = "wind_mph"
-//        case windKph = "wind_kph"
-//        case windDegree = "wind_degree"
-//        case windDir = "wind_dir"
-//        case pressureMB = "pressure_mb"
-//        case pressureIn = "pressure_in"
-//        case precipMm = "precip_mm"
-//        case precipIn = "precip_in"
-//        case humidity, cloud
-//        case feelslikeC = "feelslike_c"
-//        case feelslikeF = "feelslike_f"
-//        case visKM = "vis_km"
-//        case visMiles = "vis_miles"
-//        case uv
-//        case gustMph = "gust_mph"
-//        case gustKph = "gust_kph"
+        case tempF = "temp_f"
+    }
+    
+    required override init() {
+        super.init()
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        lastUpdatedEpoch = try container.decode(Int.self, forKey: .lastUpdatedEpoch)
+        lastUpdated = try container.decode(String.self, forKey: .lastUpdated)
+        tempC = try container.decode(Double.self, forKey: .tempC)
+        tempF = try container.decode(Double.self, forKey: .tempF)
+        super.init()
+    }
+}
+@objcMembers class wForecastR: Object, Codable {
+    let forecastday = List<wForecastdayR>()
+    
+    required override init() {
+        super.init()
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        let f = try container.decode([wForecastdayR].self, forKey: .forecastday)
+        forecastday.append(objectsIn: f)
+        super.init()
     }
 }
 
-// MARK: - Condition
-struct Condition: Codable {
-    let text: String
-    let icon: String
-    let code: Int
-}
-//
-//enum Text: String, Codable {
-//    case lightRain = "Light rain"
-//    case lightRainShower = "Light rain shower"
-//    case overcast = "Overcast"
-//    case partlyCloudy = "Partly cloudy"
-//    case patchyRainPossible = "Patchy rain possible"
-//}
-//
-//enum WindDir: String, Codable {
-//    case s = "S"
-//    case sse = "SSE"
-//    case ssw = "SSW"
-//    case sw = "SW"
-//    case wsw = "WSW"
-//}
-
-// MARK: - Forecast
-struct Forecast: Codable {
-    let forecastday: [Forecastday]
-}
-
-// MARK: - Forecastday
-struct Forecastday: Codable {
-    let date: String
-    let dateEpoch: Int
-    let day: Day
-    let astro: Astro
-    let hour: [Hour]
-
+@objcMembers class wForecastdayR: Object, Codable {
+    dynamic var date: String = ""
+    dynamic var dateEpoch: Int = 0
+    dynamic var day: wDayR? = nil
+    let hour = List<wHourR>()
+    
     enum CodingKeys: String, CodingKey {
         case date
         case dateEpoch = "date_epoch"
-        case day, astro, hour
+        case day, hour
+    }
+    
+    required override init() {
+        super.init()
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        date = try container.decode(String.self, forKey: .date)
+        dateEpoch = try container.decode(Int.self, forKey: .dateEpoch)
+        day = try container.decode(wDayR.self, forKey: .day)
+        let h = try container.decode([wHourR].self, forKey: .hour)
+        hour.append(objectsIn: h)
+        super.init()
     }
 }
 
-// MARK: - Astro
-struct Astro: Codable {
-    let sunrise, sunset, moonrise, moonset: String
-    let moonPhase, moonIllumination: String
-
-    enum CodingKeys: String, CodingKey {
-        case sunrise, sunset, moonrise, moonset
-        case moonPhase = "moon_phase"
-        case moonIllumination = "moon_illumination"
-    }
-}
-
-// MARK: - Day
-struct Day: Codable {
-    let maxtempC, maxtempF, mintempC, mintempF: Double
-    let avgtempC, avgtempF, maxwindMph, maxwindKph: Double
-    let totalprecipMm, totalprecipIn, avgvisKM: Double
-    let avgvisMiles, avghumidity, dailyWillItRain: Int
-    let dailyChanceOfRain: String
-    let dailyWillItSnow: Int
-    let dailyChanceOfSnow: String
-    let condition: Condition
-    let uv: Int
-
+@objcMembers class wDayR: Object, Codable {
+    dynamic var maxtempC:  Double = 0.0
+    dynamic var maxtempF: Double = 0.0
+    dynamic var mintempC: Double = 0.0
+    dynamic var mintempF: Double = 0.0
+    dynamic var avgtempC: Double = 0.0
+    dynamic var avgtempF: Double = 0.0
+    dynamic var avgvisMiles: Int = 0
+    dynamic var avghumidity: Int = 0
+    dynamic var dailyWillItRain: Int = 0
+    dynamic var dailyChanceOfRain: String = ""
+    dynamic var dailyWillItSnow: Int = 0
+    dynamic var dailyChanceOfSnow: String = ""
+    dynamic var condition: wConditionR? = nil
+    
     enum CodingKeys: String, CodingKey {
         case maxtempC = "maxtemp_c"
         case maxtempF = "maxtemp_f"
@@ -137,44 +162,48 @@ struct Day: Codable {
         case mintempF = "mintemp_f"
         case avgtempC = "avgtemp_c"
         case avgtempF = "avgtemp_f"
-        case maxwindMph = "maxwind_mph"
-        case maxwindKph = "maxwind_kph"
-        case totalprecipMm = "totalprecip_mm"
-        case totalprecipIn = "totalprecip_in"
-        case avgvisKM = "avgvis_km"
         case avgvisMiles = "avgvis_miles"
         case avghumidity
         case dailyWillItRain = "daily_will_it_rain"
         case dailyChanceOfRain = "daily_chance_of_rain"
         case dailyWillItSnow = "daily_will_it_snow"
         case dailyChanceOfSnow = "daily_chance_of_snow"
-        case condition, uv
+        case condition
+    }
+    
+    required override init() {
+        super.init()
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        maxtempC = try container.decode(Double.self, forKey: .maxtempC)
+        maxtempF = try container.decode(Double.self, forKey: .maxtempF)
+        mintempC = try container.decode(Double.self, forKey: .mintempC)
+        mintempF = try container.decode(Double.self, forKey: .mintempF)
+        avgtempC = try container.decode(Double.self, forKey: .avgtempC)
+        avgtempF = try container.decode(Double.self, forKey: .avgtempF)
+        avgvisMiles = try container.decode(Int.self, forKey: .avgvisMiles)
+        avghumidity = try container.decode(Int.self, forKey: .avghumidity)
+        dailyWillItRain = try container.decode(Int.self, forKey: .dailyWillItRain)
+        dailyChanceOfRain = try container.decode(String.self, forKey: .dailyChanceOfRain)
+        dailyWillItSnow = try container.decode(Int.self, forKey: .dailyWillItSnow)
+        dailyChanceOfSnow = try container.decode(String.self, forKey: .dailyChanceOfSnow)
+        condition = try container.decode(wConditionR.self, forKey: .condition)
+        
+        super.init()
     }
 }
 
-// MARK: - Hour
-struct Hour: Codable {
-    let timeEpoch: Int
-    let time: String
-    let tempC, tempF: Double
-    let isDay: Int
-    let condition: Condition
-    let windMph, windKph: Double
-    let windDegree: Int
-   // let windDir: WindDir
-    let pressureMB: Int
-    let pressureIn, precipMm, precipIn: Double
-    let humidity, cloud: Int
-    let feelslikeC, feelslikeF, windchillC, windchillF: Double
-    let heatindexC, heatindexF, dewpointC, dewpointF: Double
-    let willItRain: Int
-    let chanceOfRain: String
-    let willItSnow: Int
-    let chanceOfSnow: String
-    let visKM: Double
-    let visMiles: Int
-    let gustMph, gustKph: Double
-
+@objcMembers class wHourR: Object, Codable {
+    dynamic var timeEpoch: Int = 0
+    dynamic var time: String = ""
+    dynamic var tempC: Double = 0.0
+    dynamic var tempF: Double = 0.0
+    dynamic var isDay: Int = 0
+    dynamic var condition: wConditionR? = nil
+    
     enum CodingKeys: String, CodingKey {
         case timeEpoch = "time_epoch"
         case time
@@ -182,46 +211,41 @@ struct Hour: Codable {
         case tempF = "temp_f"
         case isDay = "is_day"
         case condition
-        case windMph = "wind_mph"
-        case windKph = "wind_kph"
-        case windDegree = "wind_degree"
-        // case windDir = "wind_dir"
-        case pressureMB = "pressure_mb"
-        case pressureIn = "pressure_in"
-        case precipMm = "precip_mm"
-        case precipIn = "precip_in"
-        case humidity, cloud
-        case feelslikeC = "feelslike_c"
-        case feelslikeF = "feelslike_f"
-        case windchillC = "windchill_c"
-        case windchillF = "windchill_f"
-        case heatindexC = "heatindex_c"
-        case heatindexF = "heatindex_f"
-        case dewpointC = "dewpoint_c"
-        case dewpointF = "dewpoint_f"
-        case willItRain = "will_it_rain"
-        case chanceOfRain = "chance_of_rain"
-        case willItSnow = "will_it_snow"
-        case chanceOfSnow = "chance_of_snow"
-        case visKM = "vis_km"
-        case visMiles = "vis_miles"
-        case gustMph = "gust_mph"
-        case gustKph = "gust_kph"
+    }
+    
+    required override init() {
+        super.init()
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        timeEpoch = try container.decode(Int.self, forKey: .timeEpoch)
+        time = try container.decode(String.self, forKey: .time)
+        tempC = try container.decode(Double.self, forKey: .tempC)
+        tempF = try container.decode(Double.self, forKey: .tempF)
+        isDay = try container.decode(Int.self, forKey: .isDay)
+        condition = try container.decode(wConditionR.self, forKey: .condition)
+        
+        super.init()
     }
 }
-
-// MARK: - Location
-struct wLocation: Codable {
-    let name, region, country: String
-    let lat, lon: Double
-    let tzID: String
-    let localtimeEpoch: Int
-    let localtime: String
-
-    enum CodingKeys: String, CodingKey {
-        case name, region, country, lat, lon
-        case tzID = "tz_id"
-        case localtimeEpoch = "localtime_epoch"
-        case localtime
+@objcMembers class wConditionR: Object, Codable {
+    dynamic var text: String = ""
+    dynamic var icon: String = ""
+    dynamic var code: Int = 0
+    
+    required override init() {
+        super.init()
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        text = try container.decode(String.self, forKey: .text)
+        icon = try container.decode(String.self, forKey: .icon)
+        code = try container.decode(Int.self, forKey: .code)
+        
+        super.init()
     }
 }

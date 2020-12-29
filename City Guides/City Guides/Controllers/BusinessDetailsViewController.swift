@@ -9,7 +9,7 @@ import UIKit
 import CoreLocation
 
 class BusinessDetailsViewController: UIViewController {
-
+    
 // MARK: - IBOutlets
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
@@ -19,45 +19,33 @@ class BusinessDetailsViewController: UIViewController {
     @IBOutlet weak var phoneLabel: UILabel!
     @IBOutlet weak var starStackView: UIStackView!
     @IBOutlet weak var currentDateLabel: UILabel!
+    @IBOutlet weak var toggleButton: UIButton!
     
     
 // MARK: - Constants & Variables
+    let businessManager = BusinessDetailsManager()
     var busi: BusinessRealm?
+    var busiWeather = BusinessWeather()
     var request = WeatherRequest()
     var coor = CLLocationCoordinate2D() {
         didSet {
-            request.fetchWeather(coordinates: self.coor) { [self] (result) in
-                switch result {
-                case let .success(w):
-                    print("Successfully found \(w).")
-                    weather = w
-                case let .failure(error):
-                    print("Error fetching weather: \(error)")
-                }
-            }
+            fetchWeather()
         }
     }
-    var weather: WeatherResponse? {
+    var weather: WeatherResponseR? {
         didSet {
-            currentDateLabel.text = weatherInfo(date: weather?.forecast.forecastday[0].date)
+            currentDateLabel.text = businessManager.dateFormat(date: weather?.forecast!.forecastday[0].date, from: .midium, to: .dayNameMD)//weatherInfo(date: weather?.forecast!.forecastday[0].date)
             self.collectionView.reloadData()
             self.tableView.reloadData()
         }
     }
-    
-//        let dateFormatter: DateFormatter = {
-//            let formatter = DateFormatter()
-//            formatter.dateFormat = "yyyy-MM-dd HH:mm"
-//            return formatter
-//        }()
+    var tableViewVisible = true
     
 // MARK: - Lifecycles
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("Businesssss: ", busi?.location)
-        //        print("busi?.coordinates?.latitude", busi?.coordinates?.latitude)
+        tableView.isHidden = tableViewVisible
         coor = CLLocationCoordinate2D(latitude: (busi?.coordinates?.latitude) ?? 0.0, longitude: (busi?.coordinates?.longitude) ?? 0.0)
-        print(coor)
         collectionView.delegate = self
         collectionView.dataSource = self
         tableView.delegate = self
@@ -65,168 +53,96 @@ class BusinessDetailsViewController: UIViewController {
         businessInfo()
         setupUI()
     }
+    
+    @IBAction func showMoreForecast(_ sender: UIButton) {
+        let willExpand = tableView.isHidden
+        let buttonNewTitle = willExpand ? "Show Less" : "Show More"
+        self.tableView.isHidden = !willExpand
+        if willExpand {
+            self.toggleButton.setTitle(buttonNewTitle, for: .normal)
+        } else  if !willExpand {
+            self.toggleButton.setTitle(buttonNewTitle, for: .normal)
+        }
+    }
 }
 
 // MARK: - Functions
 extension BusinessDetailsViewController {
+    
+    func fetchWeather() {
+        if Reachability.isConnectedToNetwork() {
+            WeatherManager().fetchWeather(coordinates: coor) { [self] (w) in
+                print("Successfully found \(w).")
+                weather = w
+                busiWeather.weather = w
+                busiWeather.businessID = busi!.id
+                let flag = RealmManager.saveWeather(busiWeather)
+                print("save", flag)
+            }
+        } else {
+            if let w = RealmManager.getWeatherBy(id: busi!.id) {
+                busiWeather = w
+                weather = w.weather
+            } else {
+                currentDateLabel.isHidden = true
+                toggleButton.isHidden = true
+                print("No weather Info is available")
+            }
+        }
+    }
+    
     func businessInfo() {
         busiName.text = busi?.name
         let fileUrl = URL(string: busi!.imageURL)
-        businessImage.load(url: fileUrl!)
+        businessImage.load(url: fileUrl!) // check for connection
         let address = busi?.location?.displayAddress.joined(separator: "\n")
         addressLabel.text = address
-        if busi?.phone == "" {
-            phoneLabel.text = "phone number is not available"
-        } else {
-            phoneLabel.text = busi?.phone
-        }
-        switch Double(busi!.rating) {
-        case 5:
-            for _ in 0..<5 {
-                starStackView.addArrangedSubview(UIImageView(image: UIImage(systemName: Star.fill.rawValue)))
-            }
-        case 4...4.5:
-            for _ in 0..<4 {
-                starStackView.addArrangedSubview(UIImageView(image: UIImage(systemName: Star.fill.rawValue)))
-            }
-            starStackView.addArrangedSubview(UIImageView(image: UIImage(systemName: Star.empty.rawValue)))
-            
-        case 3...3.5:
-            for _ in 0..<3 {
-                starStackView.addArrangedSubview(UIImageView(image: UIImage(systemName: Star.fill.rawValue)))
-            }
-            for _ in 0..<2 {
-            starStackView.addArrangedSubview(UIImageView(image: UIImage(systemName: Star.empty.rawValue)))
-            }
-            
-        case 2...2.5:
-            for _ in 0..<2 {
-                starStackView.addArrangedSubview(UIImageView(image: UIImage(systemName: Star.fill.rawValue)))
-            }
-            for _ in 0..<3 {
-            starStackView.addArrangedSubview(UIImageView(image: UIImage(systemName: Star.empty.rawValue)))
-            }
-            
-        case 1...1.5:
-                starStackView.addArrangedSubview(UIImageView(image: UIImage(systemName: Star.fill.rawValue)))
-            
-            for _ in 0..<4 {
-            starStackView.addArrangedSubview(UIImageView(image: UIImage(systemName: Star.empty.rawValue)))
-            }
-        default:
-            starStackView.addArrangedSubview(UIImageView(image: UIImage(systemName: Star.empty.rawValue)))
-        }
-        
+        phoneLabel.text = businessManager.checkPhoneAvailablility(phone: busi?.phone)
+        businessManager.addStarsToStackView(rating: busi?.rating, stackView: starStackView)
     }
-    
-    func weatherInfo(date: String?) -> String {
-//        let date = weather?.forecast.forecastday[0].date
-//        print("date", date)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let dateObj = dateFormatter.date(from: date ?? "")
-        dateFormatter.dateFormat = "EEEE, MMM d"
-        let current = dateFormatter.string(from: dateObj ?? Date())
-        
-        return current
-//        currentDateLabel.text = current
-    }
-    
+
     func setupUI() {
         businessImage.roundCorner(corners: [.bottomLeft, .bottomRight], radius: 30)
         businessImage.shadow(alpha: 1)
     }
-    //    func weatherTime(_ time: String?) -> String {
-    //        let dateObj = dateFormatter.date(from: time ?? "")
-    //        dateFormatter.dateFormat = "h a"
-    //        let date = dateFormatter.string(from: dateObj ?? Date())
-    //
-    //        return date
-    //    }
-    
-    func weatherImage(_ condition: String) -> UIImage {
-        var image: UIImage?
-        switch condition {
-        case _ where (condition.contains("rain") == true):
-            image = UIImage(systemName: WeatherImage.cloudRain.rawValue)
-        case _ where (condition.contains("cloud") == true):
-            image = UIImage(systemName: WeatherImage.cloud.rawValue)
-        case _ where (condition.contains("Overcast") == true):
-            image = UIImage(systemName: WeatherImage.cloudSun.rawValue)
-        case _ where (condition.contains("clear") == true):
-            image = UIImage(systemName: WeatherImage.sunMin.rawValue)
-        case _ where (condition.contains("drizzle") == true):
-            image = UIImage(systemName: WeatherImage.cloudDrizzle.rawValue)
-        default:
-            image = UIImage(systemName: "cloud") // re-check here
-        }
-        return image!
-    }
 }
 
+// MARK: - Weather Forecast TableView
 extension BusinessDetailsViewController: UITableViewDataSource ,UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        weather?.forecast.forecastday.count ?? 0
+        weather?.forecast!.forecastday.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let forecase = weather?.forecast.forecastday[indexPath.row]
+        let forecase = weather?.forecast!.forecastday[indexPath.row]
         
         let identifier = "Cell"
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
         
-        cell.textLabel?.text = weatherInfo(date: forecase?.date)
-        cell.detailTextLabel?.text = String(forecase?.day.avgtempC ?? 0.0)
+        cell.textLabel?.text = businessManager.dateFormat(date: forecase?.date, from: .midium, to: .dayNameMD)//weatherInfo(date: forecase?.date)
+        cell.detailTextLabel?.text = String(forecase?.day?.avgtempC ?? 0.0)
         return cell
     }
 }
 
+// MARK: - Today's weather CollectionView
 extension BusinessDetailsViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        weather?.forecast.forecastday[0].hour.count ?? 1
+        weather?.forecast!.forecastday[0].hour.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let forecase = weather?.forecast.forecastday[0]
-        let hour = forecase?.hour[indexPath.row]
+        let forecase = weather?.forecast!.forecastday[0]
+        let hour = forecase?.hour[indexPath.item]
         
         let identifier = "Cell"
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! WeatherCollectionViewCell
         cell.setupCellShadow()
-        let d = hour?.time
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-        let dateObj = dateFormatter.date(from: d ?? "")
         
-        dateFormatter.dateFormat = "h a"
-        let date = dateFormatter.string(from: dateObj ?? Date())
-        cell.hourLabel.text = date
+        cell.hourLabel.text = businessManager.dateFormat(date: hour?.time, from: .wholeDate, to: .time)
         cell.degreeLabel.text = String(hour?.tempC ?? 0) + " ℃"
-        cell.weatherImage.image = weatherImage(hour?.condition.text ?? "")
+        cell.weatherImage.image = businessManager.weatherImage(hour?.condition?.text ?? "")
         
         return cell
-    }
-}
-
-// MARK: - Enums
-extension BusinessDetailsViewController {
-    enum Star: String {
-        case fill = "star.fill"
-        case empty = "star"
-    }
-    
-    enum WeatherImage: String {
-        case cloudRain = "cloud.rain.fill"
-        case cloud = "cloud.fill"
-        case cloudSun = "cloud.sun.fill"
-        case sunMin = "sun.min.fill"
-        case cloudDrizzle = "cloud.drizzle.fill"
-    }
-}
-
-// MARK: - Protocols
-extension BusinessDetailsViewController: UpdateCoor {
-    func passCoor(coor: CLLocationCoordinate2D) {
-        self.coor = coor
     }
 }

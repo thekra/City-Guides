@@ -21,14 +21,14 @@ class WeatherRequest {
      - returns: void
      */
     
-    func fetchWeather(coordinates: CLLocationCoordinate2D, completion: @escaping (Result<WeatherResponse, Error>) -> Void) {
+    func fetchWeather(coordinates: CLLocationCoordinate2D, completion: @escaping (Result<WeatherResponseR, Error>) -> Void) {
         
         let url = WeatherAPI.weatherURL(coor: coordinates)
         let request = URLRequest(url: url)
         let task = session.dataTask(with: request) {
             (data, response, error) in
             
-            let result = self.processForcasteRequest(data: data, error: error)
+            let result = self.processForcastRequest(data: data, error: error)
             print("result", result)
             DispatchQueue.main.async {
                 completion(result)
@@ -45,7 +45,7 @@ class WeatherRequest {
      - parameter error: takes Error as an input
      - returns: a Result of success or failure
      */
-    func processForcasteRequest(data: Data?, error: Error?) -> Result<WeatherResponse, Error> {
+    func processForcastRequest(data: Data?, error: Error?) -> Result<WeatherResponseR, Error> {
         guard let jsonData = data else {
             return .failure(error!)
         }

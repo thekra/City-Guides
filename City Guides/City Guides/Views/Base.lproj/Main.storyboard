@@ -578,15 +578,33 @@
                                                         <constraints>
                                                             <constraint firstAttribute="trailing" secondItem="WHY-z2-lHM" secondAttribute="trailing" id="16E-Sn-Z9E"/>
                                                             <constraint firstItem="QUs-Tl-dAK" firstAttribute="width" secondItem="aZj-vv-d16" secondAttribute="width" multiplier="0.5" id="1eK-Sc-XG0"/>
+                                                            <constraint firstAttribute="height" constant="164" id="wW1-AC-xI9"/>
                                                             <constraint firstAttribute="trailing" secondItem="aZj-vv-d16" secondAttribute="trailing" id="xo5-f3-vKf"/>
                                                         </constraints>
                                                     </stackView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="        Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2s-ic-naR">
+                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="isp-XY-QVg">
                                                         <rect key="frame" x="0.0" y="169" width="414" height="31"/>
-                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="        Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2s-ic-naR">
+                                                                <rect key="frame" x="0.0" y="0.0" width="207" height="31"/>
+                                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vV2-1J-Aal">
+                                                                <rect key="frame" x="207" y="0.0" width="207" height="31"/>
+                                                                <state key="normal" title="Show More">
+                                                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                </state>
+                                                                <connections>
+                                                                    <action selector="showMoreForecast:" destination="aR3-vQ-eqa" eventType="touchUpInside" id="OfE-ui-ZC5"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="31" id="Emd-Ir-XGs"/>
+                                                        </constraints>
+                                                    </stackView>
                                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="aXU-po-8dO">
                                                         <rect key="frame" x="0.0" y="205" width="414" height="160"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -727,7 +745,7 @@
                                                     </tableView>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="500" id="EU4-TJ-RmR"/>
+                                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="500" id="EU4-TJ-RmR"/>
                                                 </constraints>
                                             </stackView>
                                         </subviews>
@@ -776,6 +794,7 @@
                         <outlet property="phoneLabel" destination="P2Z-is-f5t" id="hTb-d2-lcL"/>
                         <outlet property="starStackView" destination="MWX-RN-6Rh" id="lS3-mF-K4Z"/>
                         <outlet property="tableView" destination="Zv3-fv-9VU" id="pNc-lA-Fi3"/>
+                        <outlet property="toggleButton" destination="vV2-1J-Aal" id="xQn-hD-XUX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="slL-B3-THD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1157,7 +1176,6 @@
     <designables>
         <designable name="7lw-Q7-hUE"/>
         <designable name="Ill-fN-o5V"/>
-        <designable name="bqd-Is-TUc"/>
     </designables>
     <inferredMetricsTieBreakers>
         <segue reference="Rai-j7-65k"/>

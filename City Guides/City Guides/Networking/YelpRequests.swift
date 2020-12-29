@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 class YelpRequest {
     private let session: URLSession = {
@@ -20,9 +21,9 @@ class YelpRequest {
      - returns: void
      */
     
-    func fetchBusinesses(completion: @escaping (Result<BusinessesResponse, Error>) -> Void) {
+    func fetchBusinesses(coor: CLLocationCoordinate2D, completion: @escaping (Result<BusinessesResponse, Error>) -> Void) {
         
-        let url = YelpAPI.searchURL()
+        let url = YelpAPI.searchURL(coor: coor)
         var request = URLRequest(url: url)
         request.setValue("Bearer \(YelpAPI.apiKey)", forHTTPHeaderField: "Authorization")
         let task = session.dataTask(with: request) {

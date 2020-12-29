@@ -13,11 +13,11 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     var locationManager: CLLocationManager!
     static var currentLocation = CLLocationCoordinate2D() {
         didSet {
-            delegate?.passCoor(coor: currentLocation)
+            #warning("when running tests this line crashes (erminating app due to uncaught exception 'NSInvalidArgumentException', reason: '+[NSValue valueWithMKCoordinate:]: unrecognized selector sent to class 0x7fff86d948d0')")
+//            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "updateCoor"), object: currentLocation)
         }
     }
     
-    static var delegate: UpdateCoor?
     static var shared = LocationManager()
     
     //MARK:- CLLocationManagerDelegate Methods

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 enum EndPoint: String {
     case search = "businesses/search"
@@ -59,9 +60,8 @@ struct YelpAPI {
      - parameter parameters: an optional parameter for if there are additional parameters
      - returns: a url to use for the request api
      */
-    static func searchURL(parameter: [String:String]? = ["location": "NYC"]) -> URL {
-        
-        return searchURL(parameters: parameter)
+    static func searchURL(coor: CLLocationCoordinate2D) -> URL {
+        return searchURL(parameters:  ["latitude": "\(coor.latitude)", "longitude": "\(coor.longitude)"])
     }
     
     /**

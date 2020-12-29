@@ -30,8 +30,15 @@
 		794E4945258C0FB500BD1FE1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 794E4943258C0FB500BD1FE1 /* Main.storyboard */; };
 		794E4947258C0FBB00BD1FE1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 794E4946258C0FBB00BD1FE1 /* Assets.xcassets */; };
 		794E494A258C0FBB00BD1FE1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 794E4948258C0FBB00BD1FE1 /* LaunchScreen.storyboard */; };
-		794E4955258C0FBB00BD1FE1 /* City_GuidesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794E4954258C0FBB00BD1FE1 /* City_GuidesTests.swift */; };
 		794E4960258C0FBB00BD1FE1 /* City_GuidesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794E495F258C0FBB00BD1FE1 /* City_GuidesUITests.swift */; };
+		795BF2A6259A406300C13310 /* BusinessesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795BF2A5259A406300C13310 /* BusinessesManager.swift */; };
+		795BF2AB259A546000C13310 /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795BF2AA259A546000C13310 /* WeatherManager.swift */; };
+		795BF2B0259A6C1C00C13310 /* BusinessesManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795BF2AF259A6C1C00C13310 /* BusinessesManagerTests.swift */; };
+		795BF2B5259A990E00C13310 /* BusinessDetailsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795BF2B4259A990E00C13310 /* BusinessDetailsManager.swift */; };
+		795BF2BD259AAE2A00C13310 /* BusinessDetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795BF2BC259AAE2A00C13310 /* BusinessDetailsTests.swift */; };
+		795BF2C5259AC8DA00C13310 /* RealmManagetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795BF2C4259AC8DA00C13310 /* RealmManagetTests.swift */; };
+		795BF2CA259AD1CE00C13310 /* YelpRequestsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795BF2C9259AD1CE00C13310 /* YelpRequestsTests.swift */; };
+		795BF2CF259AD2B700C13310 /* WeatherRequestsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795BF2CE259AD2B700C13310 /* WeatherRequestsTests.swift */; };
 		799D86AE2597F5D1002A7096 /* weatherCloudy.json in Resources */ = {isa = PBXBuildFile; fileRef = 799D86AD2597F5D1002A7096 /* weatherCloudy.json */; };
 		79F9891C258F154500463EA9 /* WeatherCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F9891B258F154500463EA9 /* WeatherCollectionViewCell.swift */; };
 		DA045DA3DBA1DC967F972CD2 /* Pods_City_Guides.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51CA0BE9DF829BBEA99A708B /* Pods_City_Guides.framework */; };
@@ -87,11 +94,18 @@
 		794E4949258C0FBB00BD1FE1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		794E494B258C0FBB00BD1FE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		794E4950258C0FBB00BD1FE1 /* City GuidesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "City GuidesTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		794E4954258C0FBB00BD1FE1 /* City_GuidesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City_GuidesTests.swift; sourceTree = "<group>"; };
 		794E4956258C0FBB00BD1FE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		794E495B258C0FBB00BD1FE1 /* City GuidesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "City GuidesUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		794E495F258C0FBB00BD1FE1 /* City_GuidesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City_GuidesUITests.swift; sourceTree = "<group>"; };
 		794E4961258C0FBB00BD1FE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		795BF2A5259A406300C13310 /* BusinessesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessesManager.swift; sourceTree = "<group>"; };
+		795BF2AA259A546000C13310 /* WeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherManager.swift; sourceTree = "<group>"; };
+		795BF2AF259A6C1C00C13310 /* BusinessesManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessesManagerTests.swift; sourceTree = "<group>"; };
+		795BF2B4259A990E00C13310 /* BusinessDetailsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessDetailsManager.swift; sourceTree = "<group>"; };
+		795BF2BC259AAE2A00C13310 /* BusinessDetailsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessDetailsTests.swift; sourceTree = "<group>"; };
+		795BF2C4259AC8DA00C13310 /* RealmManagetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManagetTests.swift; sourceTree = "<group>"; };
+		795BF2C9259AD1CE00C13310 /* YelpRequestsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YelpRequestsTests.swift; sourceTree = "<group>"; };
+		795BF2CE259AD2B700C13310 /* WeatherRequestsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherRequestsTests.swift; sourceTree = "<group>"; };
 		799D86AD2597F5D1002A7096 /* weatherCloudy.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = weatherCloudy.json; sourceTree = "<group>"; };
 		79F9891B258F154500463EA9 /* WeatherCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCollectionViewCell.swift; sourceTree = "<group>"; };
 		D33E7CDE5A4DB98250209C24 /* Pods-City GuidesTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-City GuidesTests.debug.xcconfig"; path = "Target Support Files/Pods-City GuidesTests/Pods-City GuidesTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -207,8 +221,12 @@
 		794E4953258C0FBB00BD1FE1 /* City GuidesTests */ = {
 			isa = PBXGroup;
 			children = (
-				794E4954258C0FBB00BD1FE1 /* City_GuidesTests.swift */,
 				794E4956258C0FBB00BD1FE1 /* Info.plist */,
+				795BF2AF259A6C1C00C13310 /* BusinessesManagerTests.swift */,
+				795BF2BC259AAE2A00C13310 /* BusinessDetailsTests.swift */,
+				795BF2C4259AC8DA00C13310 /* RealmManagetTests.swift */,
+				795BF2C9259AD1CE00C13310 /* YelpRequestsTests.swift */,
+				795BF2CE259AD2B700C13310 /* WeatherRequestsTests.swift */,
 			);
 			path = "City GuidesTests";
 			sourceTree = "<group>";
@@ -279,6 +297,9 @@
 			children = (
 				792C03E4258C1AD5008FB32F /* LocationManager.swift */,
 				7927A1B7259652FB00D6ABC6 /* RealmManager.swift */,
+				795BF2A5259A406300C13310 /* BusinessesManager.swift */,
+				795BF2AA259A546000C13310 /* WeatherManager.swift */,
+				795BF2B4259A990E00C13310 /* BusinessDetailsManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -561,9 +582,12 @@
 			files = (
 				792C0426258D2070008FB32F /* CollectionViewCell.swift in Sources */,
 				792C03EF258C209A008FB32F /* YelpAPI.swift in Sources */,
+				795BF2AB259A546000C13310 /* WeatherManager.swift in Sources */,
+				795BF2A6259A406300C13310 /* BusinessesManager.swift in Sources */,
 				792C0421258D1D07008FB32F /* Extensions.swift in Sources */,
 				7927A1A0258FC0EB00D6ABC6 /* WeatherRequest.swift in Sources */,
 				792C03FD258C2747008FB32F /* YelpRequests.swift in Sources */,
+				795BF2B5259A990E00C13310 /* BusinessDetailsManager.swift in Sources */,
 				792C03E5258C1AD5008FB32F /* LocationManager.swift in Sources */,
 				7927A1B8259652FB00D6ABC6 /* RealmManager.swift in Sources */,
 				794E4942258C0FB500BD1FE1 /* MapViewController.swift in Sources */,
@@ -584,7 +608,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				794E4955258C0FBB00BD1FE1 /* City_GuidesTests.swift in Sources */,
+				795BF2CF259AD2B700C13310 /* WeatherRequestsTests.swift in Sources */,
+				795BF2BD259AAE2A00C13310 /* BusinessDetailsTests.swift in Sources */,
+				795BF2C5259AC8DA00C13310 /* RealmManagetTests.swift in Sources */,
+				795BF2B0259A6C1C00C13310 /* BusinessesManagerTests.swift in Sources */,
+				795BF2CA259AD1CE00C13310 /* YelpRequestsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
